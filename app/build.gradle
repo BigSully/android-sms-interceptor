@@ -1,0 +1,57 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        applicationId "org.duckdns.fool"
+        minSdkVersion 15
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("myCustomkey.keystore")
+            storePassword "111111"
+            keyAlias "customKey"
+            keyPassword "111111"
+        }
+    }
+    buildTypes {
+
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        phone{
+            applicationId "org.duckdns.fool"
+            minSdkVersion 14
+            targetSdkVersion 20
+
+            versionName "1.0-phone"
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+ext {
+    OK_HTTP_VERSION='3.9.0'
+}
+
+dependencies {
+    compile group: 'com.squareup.okhttp3', name: 'okhttp', version: "$OK_HTTP_VERSION"
+    compile group: 'com.squareup.okhttp3', name: 'okhttp-urlconnection', version: "$OK_HTTP_VERSION"
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.1.1'
+}
