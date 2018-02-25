@@ -1,4 +1,4 @@
-
+This app is designed to listening on incoming sms message filtered by sender phone number regular expression specified in the ui, and post the eligible sms message to the url of http server specified in the ui.<br>
 
 compile requisition:<br>
 gradle2.2<br>
