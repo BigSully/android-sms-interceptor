@@ -84,7 +84,7 @@ public class SmsListener extends BroadcastReceiver {
                 @Override
                 public void run() {
                     try{
-                        sendMessage(sender, message, url, phoneNumber);
+                        execWithRetry(sender, message, url, phoneNumber);
                     }catch (Exception ex){
                         ex.printStackTrace();
                     }
@@ -110,6 +110,24 @@ public class SmsListener extends BroadcastReceiver {
 
             System.out.println(response.body().string());
         }
+    }
+
+    // retry wrapper of sendMessage
+    public void execWithRetry(String from, String text, String url, String to) throws Exception {
+        int maxRetries = 3;
+        int numAttempts = 0;
+        Exception exception;
+        do {
+            boolean isRetry = numAttempts > 0;
+            try {
+                if(isRetry) Thread.sleep(numAttempts * 1000);
+                this.sendMessage(from, text, url, to);  // the retry
+                return;
+            } catch (Exception ex) {
+                exception = ex;
+            }
+        } while ((++numAttempts) <= maxRetries);
+        throw exception;
     }
 
     // get phone number
