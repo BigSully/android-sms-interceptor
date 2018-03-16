@@ -61,7 +61,7 @@ public class SmsListener extends BroadcastReceiver {
     }
 
     public void convertMessage(Context context, Intent intent){
-        final String phoneNumber = getPhoneNumber(context);
+        final String deviceId = getDeviceId(context);
 
         Map<String, List<String>> map = new HashMap<>();
         for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
@@ -84,7 +84,7 @@ public class SmsListener extends BroadcastReceiver {
                 @Override
                 public void run() {
                     try{
-                        execWithRetry(sender, message, url, phoneNumber);
+                        execWithRetry(sender, message, url, deviceId);
                     }catch (Exception ex){
                         ex.printStackTrace();
                     }
@@ -131,11 +131,23 @@ public class SmsListener extends BroadcastReceiver {
     }
 
     // get phone number
+
+    /**
+     * get phone number   There is no guarantee that this method will retuan a real number!
+     * @param ctx
+     * @return
+     */
+    @Deprecated
     public String getPhoneNumber(Context ctx){
         TelephonyManager tMgr = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
         String phoneNumber = tMgr.getLine1Number();
-
         return phoneNumber;
+    }
+
+    public String getDeviceId(Context ctx){
+        TelephonyManager tMgr = (TelephonyManager)ctx.getSystemService(Context.TELEPHONY_SERVICE);
+        String deviceId = tMgr.getDeviceId();
+        return deviceId;
     }
 
 }
